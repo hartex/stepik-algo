@@ -1,12 +1,32 @@
-from operator import itemgetter, attrgetter, methodcaller
+from operator import itemgetter
+
+
+def binary_search(lst, checker):
+    middle_index = len(lst) // 2
+    middle = lst[middle_index]
+    check = checker(middle)
+    if check:
+        return lst
+    else:
 
 
 def find(segments, dots):
-    segments_asc = sorted(segments, key=itemgetter(0))
-    segments_desc = sorted(segments, key=itemgetter(1))
+    segments_asc = sorted(segments, itemgetter(0))
+    segments_desc = sorted(segments, key=lambda x: x[1])
+    result = []
+    for dot in dots:
+        asc_index = 0
+        while asc_index < len(segments_desc) and segments_asc[asc_index][0] <= dot:
+            asc_index += 1
+        desc_index = 0
+        while desc_index < len(segments_desc) and segments_desc[desc_index][1] < dot:
+            desc_index += 1
+        result.append(asc_index - desc_index)
+
     print(segments_asc)
     print(segments_desc)
-    return dots
+    print(result)
+    return result
 
 
 def main():
