@@ -1,38 +1,46 @@
 def ladder_rec(values):
-    val_len = len(values)
+    last_index = len(values) - 1
     calcs = [None] * len(values)
 
     def inner(index, total):
-        if index == val_len:
+        if index == last_index:
             return total
-        elif index + 1 == val_len:
-            calcs[index] = values[index]
-            return inner(index + 1, total + values[index])
+        # a last but one element
+        elif index + 1 == last_index:
+            calcs[index + 1] = values[index + 1]
+            return inner(index + 1, total + values[index + 1])
         else:
-            one_step = calcs[index]
-            if one_step is not None:
-                if calcs[index] else inner(index + 1)
-            calcs[index] = one_step
-            two_step = calcs[index + 1] if calcs[index + 1] else inner(index + 2)
-            calcs[index] = two_step
-            return inner(one_step if one_step > two_step else two_step)
+            one_step_total = 0
+            two_step_total = 0
+            if calcs[index + 1]:
+                one_step_total = calcs[index + 1]
+            else:
+                one_step_total = values[index + 1] + inner(index + 1, total)
+                calcs[index + 1] = one_step_total
 
-    return inner(0, 0)
+            if calcs[index + 2]:
+                two_step_total = calcs[index + 2]
+            else:
+                two_step_total = values[index + 2] + inner(index + 2, total)
+                calcs[index + 2] = two_step_total
 
+            return max(one_step_total, two_step_total)
 
-# Подсказка: можно создать вектор D, в котором D[i] - максимальная сумма первых i чисел,
-# и на каждой итерации брать максимум из двух вариантов перехода по лестнице.
+    return inner(-1, 0)
+
 
 def main():
-    # _ = int(input())
-    # values = list(map(int, input().split()))
-    values = [1, 1, -2, -4, -6, 2, 2]
+    _ = int(input())
+    values = list(map(int, input().split()))
     result = ladder_rec(values)
     print(result)
 
 
-# Examples
-# 3
-# -1 2 1
+# https://stepik.org/lesson/68418/step/4?unit=45415
+# Examples:
+# 7
+# 1 1 -2 -4 -6 2 2
+# Result:
+# 2
 if __name__ == "__main__":
     main()
